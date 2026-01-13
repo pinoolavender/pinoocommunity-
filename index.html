@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website by pinoo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --pink: #ff00ff;
+            --glass: rgba(15, 15, 15, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Press Start 2P', cursive; }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; overflow-x: hidden;
+        }
+
+        #bgVideo {
+            position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%;
+            z-index: -1; object-fit: cover; filter: brightness(40%);
+        }
+
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: 0.8s ease;
+        }
+
+        #overlay button {
+            background: #fff; border: 4px solid var(--accent); padding: 20px;
+            font-size: 10px; cursor: pointer; box-shadow: 8px 8px 0px var(--pink);
+            font-family: inherit;
+        }
+
+        .menu-btn {
+            position: fixed; top: 20px; left: 20px;
+            background: #fff; border: 4px solid #000; padding: 12px;
+            cursor: pointer; z-index: 2000; box-shadow: 4px 4px 0px var(--accent);
+        }
+
+        .sidebar {
+            position: fixed; left: -320px; top: 0; width: 280px; height: 100%;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            border-right: 4px solid #fff; padding: 100px 20px;
+            transition: 0.4s ease; z-index: 1500;
+        }
+
+        .sidebar.active { left: 0; }
+
+        .opt {
+            background: #fff; color: #000; padding: 15px; font-size: 9px;
+            cursor: pointer; border: 4px solid #000; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 4px solid #fff;
+            padding: 70px 25px 30px 25px;
+            width: 100%; max-width: 450px;
+            text-align: center; position: relative;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.6);
+        }
+
+        .profile-pic {
+            width: 90px; height: 90px; border: 4px solid #fff; outline: 4px solid #000;
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%); 
+            z-index: 100; object-fit: cover; background: #000;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        h1 { color: #fff; font-size: 10px; margin-bottom: 25px; text-shadow: 3px 3px 0px #000; line-height: 1.4; }
+
+        .card {
+            display: flex; align-items: center; background: #fff;
+            padding: 20px; text-decoration: none; color: #000; font-size: 8px;
+            margin-bottom: 15px; border: 4px solid #000;
+            box-shadow: 6px 6px 0px var(--accent);
+            transition: 0.2s;
+        }
+
+        .card i { font-size: 20px; margin-right: 20px; width: 30px; }
+        .card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--pink); }
+
+        .input-box { 
+            width: 100%; padding: 12px; background: #000; 
+            border: 3px solid #fff; color: #fff; font-size: 8px; 
+            margin-bottom: 15px; outline: none; font-family: inherit;
+        }
+
+        .action-btn { 
+            width: 100%; padding: 15px; background: #fff; font-size: 9px; 
+            cursor: pointer; border: 4px solid #000; 
+            box-shadow: 5px 5px 0px var(--pink); font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-bottom: 10px; font-family: inherit;
+        }
+
+        .sub-tab-container { display: flex; gap: 5px; margin-bottom: 15px; }
+        .sub-tab { flex: 1; padding: 10px; font-size: 7px; background: #222; color: #fff; border: 2px solid #fff; cursor: pointer; }
+        .sub-tab.active { background: var(--accent); color: #000; }
+
+        .log-box {
+            background: #000; border: 2px solid #fff; height: 100px;
+            overflow-y: auto; padding: 10px; font-size: 7px; color: #00f2ff;
+            text-align: left; margin-top: 10px; font-family: monospace;
+        }
+
+        .footer { margin-top: 25px; font-size: 8px; color: #fff; opacity: 0.6; }
+        strong { color: var(--pink); }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="baground.mp4" type="video/mp4">
+    </video>
+
+    <div id="overlay">
+        <button onclick="startApp()">[ CLICK TO ENTER ]</button>
+        <p style="color: white; font-size: 7px; margin-top: 20px;">WELCOME TO MY WEBSITES</p>
+    </div>
+
+    <audio id="myAudio" loop><source src="musik.mp3" type="audio/mpeg"></audio>
+
+    <div class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="opt" onclick="switchTab('profile')"><i class="fas fa-user"></i> PROFILE</div>
+        <div class="opt" onclick="switchTab('deploy')"><i class="fas fa-cloud-upload-alt"></i> DEPLOY HTML</div>
+        <div class="opt" onclick="switchTab('encrypt')"><i class="fas fa-lock"></i> ENCRYPT JS</div>
+        <div class="opt" onclick="switchTab('keylogger')"><i class="fas fa-bomb"></i> MULTI SPAMMER</div>
+    </div>
+
+    <div class="container">
+        <video autoplay muted loop playsinline class="profile-pic">
+            <source src="profile.mp4" type="video/mp4">
+        </video>
+
+        <div id="tab-profile" class="tab-content active">
+            <h1><i class="fas fa-star" style="color:var(--accent)"></i> PINOO COMMUNITY</h1>
+            <div class="links">
+                <a href="https://whatsapp.com/channel/0029Vb7djJ97YSdCFHhojF1b" target="_blank" class="card">
+                    <i class="fab fa-whatsapp" style="color:#25D366"></i><span>SALURAN</span>
+                </a>
+                <a href="https://www.tiktok.com/@pinooy4ndek" target="_blank" class="card">
+                    <i class="fab fa-tiktok" style="color:#000"></i><span>TIKTOK</span>
+                </a>
+                <a href="https://www.instagram.com/p1n0_19" target="_blank" class="card">
+                    <i class="fab fa-instagram" style="color:#E4405F"></i><span>INSTAGRAM</span>
+                </a>
+            </div>
+        </div>
+
+        <div id="tab-keylogger" class="tab-content">
+            <h1><i class="fas fa-bomb" style="color:var(--accent)"></i> MULTI SPAMMER</h1>
+            
+            <div class="sub-tab-container">
+                <div id="btnDisc" class="sub-tab active" onclick="setSpamMode('discord')">DISCORD</div>
+                <div id="btnTele" class="sub-tab" onclick="setSpamMode('telegram')">TELEGRAM</div>
+            </div>
+
+            <div id="uiDiscord">
+                <input type="text" id="discUrl" class="input-box" placeholder="Webhook URL...">
+                <input type="number" id="discCount" class="input-box" value="10" placeholder="Jumlah">
+                <button class="action-btn" onclick="startDiscordSpam()">MULAI SPAM</button>
+                <button class="action-btn" style="background:#ff4444; color:#fff; box-shadow: 4px 4px 0px #800000; font-size:7px;" onclick="delWebhook()">HAPUS WEBHOOK</button>
+            </div>
+
+            <div id="uiTelegram" style="display:none">
+                <input type="text" id="teleToken" class="input-box" placeholder="Bot Token...">
+                <input type="text" id="teleChat" class="input-box" placeholder="Chat ID...">
+                <input type="number" id="teleCount" class="input-box" value="10">
+                <button class="action-btn" onclick="startTeleSpam()">KIRIM SPAM</button>
+            </div>
+
+            <div class="log-box" id="logOut">> System initialized...</div>
+        </div>
+
+        <div id="tab-deploy" class="tab-content">
+            <h1>DEPLOY VERCEL</h1>
+            <input type="text" class="input-box" placeholder="Project Name...">
+            <button class="action-btn" onclick="doDeploy()">DEPLOY NOW</button>
+            <div id="rBox" class="res-box" style="display:none">✓ SUCCESS!</div>
+        </div>
+
+        <div id="tab-encrypt" class="tab-content">
+            <h1>JS ENCRYPTOR</h1>
+            <button class="action-btn" onclick="alert('Encrypting...')">PILIH FILE & ENCRYPT</button>
+        </div>
+
+        <div class="footer">CRAFTED BY <strong>PINOO</strong></div>
+    </div>
+
+    <script>
+        const spamMsg = "KEYLOGGER NYA JELEK ANJING KEDITEK, FOLLOW CH GW : https://whatsapp.com/channel/0029Vb7djJ97YSdCFHhojF1b";
+
+        function startApp() {
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 800);
+            document.getElementById('myAudio').play().catch(()=>{});
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + t).classList.add('active');
+            toggleSidebar();
+        }
+
+        function setSpamMode(mode) {
+            const isDisc = mode === 'discord';
+            document.getElementById('uiDiscord').style.display = isDisc ? 'block' : 'none';
+            document.getElementById('uiTelegram').style.display = isDisc ? 'none' : 'block';
+            document.getElementById('btnDisc').classList.toggle('active', isDisc);
+            document.getElementById('btnTele').classList.toggle('active', !isDisc);
+        }
+
+        function addLog(msg, color = "#00f2ff") {
+            const log = document.getElementById('logOut');
+            log.innerHTML += `<div style="color:${color}">> ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function startDiscordSpam() {
+            const url = document.getElementById('discUrl').value;
+            const count = document.getElementById('discCount').value;
+            if(!url.includes('discord')) return addLog("URL INVALID!", "red");
+            
+            addLog(`Starting Discord Spam: ${count}x`);
+            for(let i=1; i<=count; i++) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ content: spamMsg })
+                    });
+                    addLog(`Sent ${i}/${count}`, res.ok ? "#00ff00" : "red");
+                } catch(e) { addLog("Error Fetch", "red"); }
+                await new Promise(r => setTimeout(r, 500));
+            }
+        }
+
+        async function delWebhook() {
+            const url = document.getElementById('discUrl').value;
+            if(!url || !confirm("Hapus Webhook?")) return;
+            const res = await fetch(url, { method: 'DELETE' });
+            addLog(res.ok ? "WEBHOOK DELETED!" : "FAILED DELETE", "red");
+        }
+
+        async function startTeleSpam() {
+            const tok = document.getElementById('teleToken').value;
+            const chat = document.getElementById('teleChat').value;
+            const count = document.getElementById('teleCount').value;
+            addLog("Starting Telegram Spam...");
+            for(let i=1; i<=count; i++) {
+                try {
+                    const res = await fetch(`https://api.telegram.org/bot${tok}/sendMessage`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ chat_id: chat, text: spamMsg })
+                    });
+                    addLog(`Tele Sent ${i}/${count}`, res.ok ? "#ff00ff" : "red");
+                } catch(e) { addLog("Error Tele", "red"); }
+                await new Promise(r => setTimeout(r, 500));
+            }
+        }
+
+        function doDeploy() {
+            document.getElementById('rBox').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
